@@ -6,24 +6,12 @@ const particlesArray = [];
 const numberOfParticles = 50;
 
 function createGlow() {
-    // Mehrere überlappende Gradienten für einen weicheren Effekt
-    for(let i = 0; i < 3; i++) {
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.7);
-        
-        // Hauptgradient mit sehr feinen Abstufungen
-        gradient.addColorStop(0, 'rgba(0, 50, 255, 0.03)');
-        gradient.addColorStop(0.1, 'rgba(0, 50, 255, 0.025)');
-        gradient.addColorStop(0.2, 'rgba(0, 50, 255, 0.02)');
-        gradient.addColorStop(0.3, 'rgba(0, 50, 255, 0.015)');
-        gradient.addColorStop(0.4, 'rgba(0, 50, 255, 0.01)');
-        gradient.addColorStop(0.5, 'rgba(0, 50, 255, 0.005)');
-        gradient.addColorStop(0.6, 'rgba(0, 50, 255, 0.002)');
-        gradient.addColorStop(0.7, 'rgba(0, 50, 255, 0.001)');
-        gradient.addColorStop(1, 'rgba(0, 50, 255, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, i * 20, canvas.width, canvas.height);
-    }
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.2)');    // Stärkerer Glow oben
+    gradient.addColorStop(1, 'rgba(0, 50, 255, 0)');      // Komplett transparent unten
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 class Particle {
