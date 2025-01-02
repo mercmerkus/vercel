@@ -5,12 +5,15 @@ canvas.height = window.innerHeight;
 const particlesArray = [];
 const numberOfParticles = 50;
 
-// Glow-Gradient von oben
 function createGlow() {
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.15)');  // Blauer Glow oben
-    gradient.addColorStop(0.5, 'rgba(0, 50, 255, 0.05)'); // Schwächerer Glow in der Mitte
-    gradient.addColorStop(1, 'rgba(0, 50, 255, 0)');     // Kein Glow unten
+    // Mehr Farbstops für einen weicheren Übergang
+    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.15)');
+    gradient.addColorStop(0.2, 'rgba(0, 50, 255, 0.1)');
+    gradient.addColorStop(0.4, 'rgba(0, 50, 255, 0.05)');
+    gradient.addColorStop(0.6, 'rgba(0, 50, 255, 0.02)');
+    gradient.addColorStop(0.8, 'rgba(0, 50, 255, 0.01)');
+    gradient.addColorStop(1, 'rgba(0, 50, 255, 0)');
     
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -56,16 +59,11 @@ function init() {
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Glow zeichnen
     createGlow();
-    
-    // Partikel zeichnen
     particlesArray.forEach(particle => {
         particle.update();
         particle.draw();
     });
-    
     requestAnimationFrame(animate);
 }
 
