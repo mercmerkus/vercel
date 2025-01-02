@@ -1,25 +1,23 @@
 const canvas = document.getElementById('background');
 const ctx = canvas.getContext('2d');
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 const particlesArray = [];
-const numberOfParticles = 100;
+const numberOfParticles = 50;
 
 class Particle {
   constructor() {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 5 + 1;
-    this.speedX = Math.random() * 3 - 1.5;
-    this.speedY = Math.random() * 3 - 1.5;
+    this.size = Math.random() * 3 + 1;
+    this.speedX = Math.random() * 0.5 - 0.25;
+    this.speedY = Math.random() * 0.5 - 0.25;
   }
+
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
-
-    // Partikel neu positionieren, wenn sie den Rand erreichen
+    
     if (this.x < 0 || this.x > canvas.width) {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
@@ -29,8 +27,9 @@ class Particle {
       this.y = Math.random() * canvas.height;
     }
   }
+
   draw() {
-    ctx.fillStyle = 'rgba(0, 102, 255, 0.7)'; // Halbtransparentes Blau
+    ctx.fillStyle = 'rgba(51, 153, 255, 0.5)';
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.closePath();
@@ -52,6 +51,11 @@ function animate() {
   });
   requestAnimationFrame(animate);
 }
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
 
 init();
 animate();
