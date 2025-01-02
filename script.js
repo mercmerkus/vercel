@@ -6,9 +6,16 @@ const particlesArray = [];
 const numberOfParticles = 50;
 
 function createGlow() {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.2)');    // Stärkerer Glow oben
-    gradient.addColorStop(1, 'rgba(0, 50, 255, 0)');      // Komplett transparent unten
+    // Sehr viele kleine Abstufungen für einen super-sanften Übergang
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.8);
+    
+    // Start mit stärkerem Blau
+    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.15)');
+    
+    // Sehr viele feine Zwischenschritte für einen sanften Übergang
+    for(let i = 0.1; i <= 1; i += 0.1) {
+        gradient.addColorStop(i, `rgba(0, 50, 255, ${0.15 * (1 - i)})`);
+    }
     
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
