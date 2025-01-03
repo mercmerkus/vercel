@@ -40,6 +40,7 @@ class Particle {
         this.speedY = Math.random() * 0.3 - 0.15;
         this.opacity = Math.random() * 0.5 + 0.2;
         this.growthRate = Math.random() * 0.02 + 0.01;
+        this.baseSize = this.size; // Speichere Ursprungsgröße
     }
 
     update() {
@@ -51,13 +52,14 @@ class Particle {
             this.reset();
         }
 
-        this.size += Math.sin(Date.now() * 0.001) * this.growthRate;
+        // Stabilere Größenänderung
+        this.size = this.baseSize + Math.sin(Date.now() * 0.001) * this.growthRate;
     }
 
     draw() {
         ctx.fillStyle = `rgba(51, 153, 255, ${this.opacity})`;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, Math.abs(this.size), 0, Math.PI * 2);
         ctx.closePath();
         ctx.shadowBlur = 10;
         ctx.shadowColor = 'rgba(51, 153, 255, 0.5)';
@@ -68,12 +70,14 @@ class Particle {
 
 // Initialisiere die Partikel
 function init() {
+    particlesArray.length = 0; // Lösche vorherige Partikel
     for (let i = 0; i < numberOfParticles; i++) {
         particlesArray.push(new Particle());
     }
 }
 
 // Animationsschleife
+let animationFrameId; // Globale Variable für die Animation
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     createSmootherGlow();
@@ -81,19 +85,34 @@ function animate() {
         particle.update();
         particle.draw();
     });
-    requestAnimationFrame(animate); // Animations-Loop
+    animationFrameId = requestAnimationFrame(animate);
 }
 
 // Canvas-Größe bei Fensteränderung anpassen
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    // Hintergrund neu zeichnen, um Artefakte zu vermeiden
-    createSmootherGlow();
+    
+    // Neuinitialisierung der Partikel
+    init();
+    
+    // Stoppe vorherige Animation
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+    
+    // Starte neue Animation
+    animate();
 }
 
+// Event Listener mit Fehlerabfang
 window.addEventListener('resize', resizeCanvas);
 
-// Animation starten
-init();
-animate();
+// Fehlerbehandlung
+try {
+    // Animation starten
+    init();
+    animate();
+} catch (error) {
+    console.error("Fehler beim Initialisieren der Animation:", error);
+}
