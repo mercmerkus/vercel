@@ -5,21 +5,23 @@ canvas.height = window.innerHeight;
 const particlesArray = [];
 const numberOfParticles = 50;
 
-function createVerticalGlow() {
-    // Linearer Gradient von oben nach unten
-    const gradient = ctx.createLinearGradient(
-        0, 0, 
-        0, canvas.height * 0.7 // Gradient erstreckt sich nur bis 70% der Höhe
+function createSmootherGlow() {
+    // Radiales Gradient für einen weicheren, natürlicheren Übergang
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const gradient = ctx.createRadialGradient(
+        centerX, centerY, 0, 
+        centerX, centerY, Math.max(canvas.width, canvas.height)
     );
     
-    // Weichere Farbübergänge von oben nach unten
-    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.3)');
-    gradient.addColorStop(0.3, 'rgba(0, 50, 255, 0.2)');
+    // Weichere Farbübergänge
+    gradient.addColorStop(0, 'rgba(0, 50, 255, 0.2)');
+    gradient.addColorStop(0.3, 'rgba(0, 50, 255, 0.15)');
     gradient.addColorStop(0.6, 'rgba(0, 50, 255, 0.1)');
     gradient.addColorStop(1, 'rgba(0, 50, 255, 0.05)');
     
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height * 0.7);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 class Particle {
@@ -29,7 +31,7 @@ class Particle {
 
     reset() {
         this.x = Math.random() * canvas.width;
-        this.y = Math.random() * (canvas.height * 0.7); // Nur im oberen Bereich
+        this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 0.5;
         this.speedX = Math.random() * 0.3 - 0.15;
         this.speedY = Math.random() * 0.3 - 0.15;
@@ -41,9 +43,9 @@ class Particle {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Sanfteres Zurücksetzen im oberen Bereich
+        // Sanfteres Zurücksetzen
         if (this.x < -50 || this.x > canvas.width + 50 || 
-            this.y < -50 || this.y > canvas.height * 0.7 + 50) {
+            this.y < -50 || this.y > canvas.height + 50) {
             this.reset();
         }
 
@@ -77,7 +79,7 @@ function init() {
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    createVerticalGlow();
+    createSmootherGlow();
     particlesArray.forEach(particle => {
         particle.update();
         particle.draw();
