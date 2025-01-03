@@ -6,15 +6,13 @@ const particlesArray = [];
 const numberOfParticles = 50;
 
 function createSmootherGlow() {
-    // Radiales Gradient für einen weicheren, natürlicheren Übergang
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const gradient = ctx.createRadialGradient(
         centerX, centerY, 0, 
         centerX, centerY, Math.max(canvas.width, canvas.height)
     );
-    
-    // Weichere Farbübergänge
+
     gradient.addColorStop(0, 'rgba(0, 50, 255, 0.2)');
     gradient.addColorStop(0.3, 'rgba(0, 50, 255, 0.15)');
     gradient.addColorStop(0.6, 'rgba(0, 50, 255, 0.1)');
@@ -42,31 +40,23 @@ class Particle {
     update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        
-        // Sanfteres Zurücksetzen
+
         if (this.x < -50 || this.x > canvas.width + 50 || 
             this.y < -50 || this.y > canvas.height + 50) {
             this.reset();
         }
 
-        // Leichtes Pulsieren der Partikel
         this.size += Math.sin(Date.now() * 0.001) * this.growthRate;
     }
 
     draw() {
-        // Weicherer Farbverlauf mit variabler Deckkraft
         ctx.fillStyle = `rgba(51, 153, 255, ${this.opacity})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.closePath();
-        
-        // Schatten für zusätzlichen Glanz
         ctx.shadowBlur = 10;
         ctx.shadowColor = 'rgba(51, 153, 255, 0.5)';
-        
         ctx.fill();
-        
-        // Schatten zurücksetzen
         ctx.shadowBlur = 0;
     }
 }
@@ -84,10 +74,9 @@ function animate() {
         particle.update();
         particle.draw();
     });
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animate); // Endlosschleife
 }
 
-// Responsive Resize
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -96,4 +85,4 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 
 init();
-animate();
+animate(); // Animation starten
