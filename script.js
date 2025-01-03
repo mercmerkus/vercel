@@ -1,10 +1,14 @@
 const canvas = document.getElementById('background');
 const ctx = canvas.getContext('2d');
+
+// Setze die Größe des Canvas
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
 const particlesArray = [];
 const numberOfParticles = 50;
 
+// Hintergrund mit weichem Glow erstellen
 function createSmootherGlow() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
@@ -22,6 +26,7 @@ function createSmootherGlow() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+// Klasse für die Partikel
 class Particle {
     constructor() {
         this.reset();
@@ -61,12 +66,14 @@ class Particle {
     }
 }
 
+// Initialisiere die Partikel
 function init() {
     for (let i = 0; i < numberOfParticles; i++) {
         particlesArray.push(new Particle());
     }
 }
 
+// Animationsschleife
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     createSmootherGlow();
@@ -74,15 +81,19 @@ function animate() {
         particle.update();
         particle.draw();
     });
-    requestAnimationFrame(animate); // Endlosschleife
+    requestAnimationFrame(animate); // Animations-Loop
 }
 
+// Canvas-Größe bei Fensteränderung anpassen
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    // Hintergrund neu zeichnen, um Artefakte zu vermeiden
+    createSmootherGlow();
 }
 
 window.addEventListener('resize', resizeCanvas);
 
+// Animation starten
 init();
-animate(); // Animation starten
+animate();
